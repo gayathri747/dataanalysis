@@ -47,7 +47,7 @@ def maskpii(data):
 
 while True:
     response = sqs.receive_message(
-        QueueUrl=queue_url,
+        QueueUrl=queueurl,
         AttributeNames=['All'],
         MaxNumberOfMessages=5,
         MessageAttributeNames=['All'],

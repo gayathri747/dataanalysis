@@ -4,6 +4,7 @@
 ### Objective
 ### Prerequisites
 ### Installation and Setup
+### Code Overview 
 ### Acknowledgements
 
 ## Objective
@@ -54,7 +55,7 @@ You will have to make a number of decisions as you develop this solution:
   Use Sudo kill <PID>  for killing the conflicting process   
 6) Once the images are ready you should be able to check them using the **docker ps ** command from the terminal. This contains the CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS and PORTS
 
-## Python Code 
+## Code Overview 
 1) After the Docker setup has been established, it is now time to structure our code to connect to both the endpoint URL's of AWS SQS and POSTGRES and establish connectivity
 2) This is achieved in the code area as doc strings but to be brief
    Firstly, we require the end point url, queue url and connection strings for these connections.
@@ -64,7 +65,7 @@ You will have to make a number of decisions as you develop this solution:
      3) Using the receive message of sqs pull the messages from the queue and load it into flattened json object  
      4) PII data is masked using the Hash function to make sure duplicate values are having same hash when retrieved  
      5) The final output is ingested to postgresql into the user_logins table using the cursor.execute   
-### Verifying the PostgresSQL table 
+### Verifying the PostgresSQL table before executing the python code 
 1) SSH to the postgres image **fetchdocker/data-takehome-localstack** using the below command. Container id is obtained from the previous step.  
      docker exec -it <container-id> /bin/bash  
 2) After entering into the localstack container run the below command to go to postgres#  
@@ -79,4 +80,4 @@ masked_ip varchar(256),
 locale varchar(32),  
 masked_device_id varchar(256)  
 );  
-4) 
+## Execute the python code with the python3 userlogins.py

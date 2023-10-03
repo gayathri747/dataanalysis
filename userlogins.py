@@ -6,6 +6,7 @@ import boto3
 import json
 import pandas as pd
 import psycopg2
+import hashlib
 
 """
 endpoint for the localstack is provided when we first run the docker run -p command this is used as url for connecting to the AWS services
@@ -37,13 +38,14 @@ conn = psycopg2.connect(
     port='5432'
 )
 
+cursor = conn.cursor()
 """
 SHA 256 is used as the masking technique to encode the PII data. This is one way encryption and decrypting takes a longer time
 
 while there is a symmetric encryption  which requires a secured key which follows the 
 """
 def maskpii(data):
-    return hashlib.sha256(value.encode()).hexdigest()
+    return hashlib.sha256(data.encode()).hexdigest()
 
 while True:
     response = sqs.receive_message(
@@ -60,7 +62,7 @@ while True:
             body = message['Body']
             message_body = json.loads(body)
             # print(message_body)
-            insert_query = "INSERT INTO user_logins(user_id, app_version, device_type, ip,locale, device_id) VALUES (%s, %s,%s, %s,%s, %s)"
+            insert_query = "INSERT INTO user_logins(user_id, app_version, device_type,masked_ip,locale, masked_device_id) VALUES (%s, %s,%s, %s,%s, %s)"
             cursor.execute(insert_query, (message_body['user_id'], message_body['app_version'], message_body['device_type'],maskpii(message_body['ip']),message_body['locale'],maskpii(message_body['device_id'])))
             conn.commit()
             print("Data inserted successfully.")

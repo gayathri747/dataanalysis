@@ -38,6 +38,7 @@ You will have to make a number of decisions as you develop this solution:
 2) Run pip install awscli-local on the command line  
    If pip is not previously installed, First install Python and run pip command  
 3) Install Postgresql using the link:  <https://www.enterprisedb.com/downloads/postgres-postgresql-downloads>
+4) Install psycopg2 to connect to the postgresql using the command **pip install psycopg2**
 ## Installation and Setup
 ### AWS Services and PostgresSQL Setup 
 1) Once Docker is installed properly, make sure the Docker is started and running.  

@@ -1,0 +1,24 @@
+How would you deploy this application in production?
+● What other components would you want to add to make this production ready?  
+● How can this application scale with a growing dataset.  
+● How can PII be recovered later on?  
+● What are the assumptions you made?  
+
+Components for making production ready  
+1) Production is a secure and Confidential environment and so best security policies needs to be followed. Following the enterpise level security policies to login to the AWS cloud  
+ using role based access and policies. AWS Key Management Service would be a great help to store the Keys for storing the confidential data.   
+2) Load Balancer and Auto Scaling needs to be setup to make sure that only one node is not overloaded.  
+3) Proper logging and authentication needs to be provided for logging into the postgresql  
+4) If there are any errors, those needs to be retried or get SNS notifications based on which they can be addressed.  
+5) Logging should be enabled  
+6) After UAT, Regression testing is completed at all levels, the code shall be deployed and monitored accordingly.  
+
+Application needs to be implemented with Load Balancer and Autoloader to maintain the loads without over burden on a single node
+PII can be recovered through decrytion methods as below from the postgres
+  SELECT pgp_sym_decrypt(encrypted_id, encrypted_key) AS decrypted_id FROM user_logins.
+
+Assumptions:
+The data from the endpoint url has access_id which has values like 1.0, 1.2.2.1, and so on. So instead of using the integer datatype i used the varchar.
+I wasnt sure about the create date as it was not available when i ran the below command. So i just used 6 columns instead of 7 for loading. But still that can be implemented as well
+
+

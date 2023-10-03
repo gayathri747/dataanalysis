@@ -61,7 +61,7 @@ while True:
         for message in response['Messages']:
             body = message['Body']
             message_body = json.loads(body)
-            # print(message_body)
+            print(message_body)
             insert_query = "INSERT INTO user_logins(user_id, app_version, device_type,masked_ip,locale, masked_device_id) VALUES (%s, %s,%s, %s,%s, %s)"
             cursor.execute(insert_query, (message_body['user_id'], message_body['app_version'], message_body['device_type'],maskpii(message_body['ip']),message_body['locale'],maskpii(message_body['device_id'])))
             conn.commit()

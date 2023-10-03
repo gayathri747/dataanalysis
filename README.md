@@ -5,7 +5,6 @@
 ### Prerequisites
 ### Installation and Setup
 ### Code Overview 
-### Acknowledgements
 
 ## Objective
   1. Read JSON data containing user login behavior from an AWS SQS Queue, that is made
@@ -16,7 +15,7 @@
   3. Once you have flattened the JSON data object and masked those two fields, write each
   record to a Postgres database that is made available via a custom postgres image that
   has the tables pre created.
-  ## Note the target table's DDL is:
+Note the target table's DDL is:  
    Creation of user_logins table:  
    CREATE TABLE IF NOT EXISTS user_logins(  
     user_id varchar(128),  

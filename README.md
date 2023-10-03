@@ -16,17 +16,17 @@
   3. Once you have flattened the JSON data object and masked those two fields, write each
   record to a Postgres database that is made available via a custom postgres image that
   has the tables pre created.
-      ## Note the target table's DDL is:
-       Creation of user_logins table:  
-       CREATE TABLE IF NOT EXISTS user_logins(  
-        user_id varchar(128),  
-        device_type varchar(32),  
-        masked_ip varchar(256),  
-        masked_device_id varchar(256),  
-        locale varchar(32),  
-        app_version integer,  
-        create_date date  
-        );
+  ## Note the target table's DDL is:
+   Creation of user_logins table:  
+   CREATE TABLE IF NOT EXISTS user_logins(  
+    user_id varchar(128),  
+    device_type varchar(32),  
+    masked_ip varchar(256),  
+    masked_device_id varchar(256),  
+    locale varchar(32),  
+    app_version integer,  
+    create_date date  
+    );  
 You will have to make a number of decisions as you develop this solution:  
 ● How will you read messages from the queue?  
 ● What type of data structures should be used?  
@@ -34,14 +34,38 @@ You will have to make a number of decisions as you develop this solution:
 ● What will be your strategy for connecting and writing to Postgres?  
 ● Where and how will your application run?  
 ## Installation on Mac 
-1) Install Docker on local machine using the link: https://docs.docker.com/get-docker/  
+1) Install Docker on local machine using the link: <https://docs.docker.com/get-docker/> 
 2) Run pip install awscli-local on the command line  
    If pip is not previously installed, First install Python and run pip command  
-3) Install Postgresql using the link:  https://www.enterprisedb.com/downloads/postgres-postgresql-downloads  
+3) Install Postgresql using the link:  <https://www.enterprisedb.com/downloads/postgres-postgresql-downloads>  
 ### AWS Services and PostgresSQL Setup 
 1) Once Docker is installed properly, make sure the Docker is started and running.  
-   Mac shows a green light with Running on the top of the desktop bar once the Installation is completed
-2)  Docker Images:
-  Download the localstack and postgressql images from the below links:
-    https://hub.docker.com/r/fetchdocker/data-takehome-postgres
-    https://hub.docker.com/r/fetchdocker/data-takehome-localstack
+   Mac shows a green light with Running on the top of the desktop bar once the Installation is completed and Docker is started.  
+2)  Docker Images:  
+    <https://hub.docker.com/r/fetchdocker/data-takehome-postgres>  
+    <https://hub.docker.com/r/fetchdocker/data-takehome-localstack>  
+    To Download the localstack and postgressql images from the above links copy the url from the DOCKER PULL COMMAND and run it on the terminal.  
+    The 2 images which are pulled will be displayed in the Docker hub application as well.  
+4) To start the containers, run the below commands  
+      docker run -p 5432:5432 fetchdocker/data-takehome-postgres:latest  
+      docker run -p 4566:4566 fetchdocker/data-takehome-localstack:latest  
+  Issues: If there is any conflicting port that needs to be killed.  
+  Check for conflicting ports with sudo lsof -I :5432  
+  Use Sudo kill <PID>  for killing the conflicting process   
+6) Once the images are ready you should be able to check them using the **docker ps ** command from the terminal. This contains the CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS and PORTS  
+### Verifying the PostgresSQL table  
+1) SSH to the postgres image **fetchdocker/data-takehome-localstack** using the below command. Container id is obtained from the previous step.  
+     docker exec -it <container-id> /bin/bash  
+2) After entering into the localstack container run the below command to go to postgres#  
+    psql -d postgres -U postgres -p 5432 -h localhost -W  
+   ** The Database, Username, Password is **postgres** **
+3) If the tables doesnot exists create one as below:  
+CREATE TABLE IF NOT EXISTS user_logins(  
+user_id varchar(128),  
+app_version varchar(100),  
+device_type varchar(32),  
+masked_ip varchar(256),  
+locale varchar(32),  
+masked_device_id varchar(256)  
+);  
+4) 

@@ -17,6 +17,10 @@ Application needs to be implemented with Load Balancer and Autoloader to maintai
 PII can be recovered through decrytion methods as below from the postgres
   SELECT pgp_sym_decrypt(encrypted_id, encrypted_key) AS decrypted_id FROM user_logins.
 
+Performance:
+For performance enhancements, Spark streaming services, Autoloader can be utilized and data can be stored in the postgres in an effective way.
+The Storage and performance tests need to be performed and implemented accordingly.
+
 Assumptions:
 The data from the endpoint url has access_id which has values like 1.0, 1.2.2.1, and so on. So instead of using the integer datatype i used the varchar.
 I wasnt sure about the create date as it was not available when i ran the below command. So i just used 6 columns instead of 7 for loading. But still that can be implemented as well

@@ -82,3 +82,4 @@ locale varchar(32),
 masked_device_id varchar(256)  
 );  
 Finally, Execute the python code with the python3 userlogins.py
+Final output is available as a snippet in the image.png file

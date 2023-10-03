@@ -35,7 +35,7 @@ You will have to make a number of decisions as you develop this solution:
 ## Prerequisites
 1) Install Docker on local machine using the link: <https://docs.docker.com/get-docker/> 
 2) Run pip install awscli-local on the command line  
-   If pip is not previously installed, First install Python usoing - <https://www.python.org/downloads/macos/> and run pip command  
+   If pip is not previously installed, First install Python using - <https://www.python.org/downloads/macos/> and run pip command  
 3) Install Postgresql using the link:  <https://www.enterprisedb.com/downloads/postgres-postgresql-downloads>
 4) Install psycopg2 to connect to the postgresql using the command **pip install psycopg2**
 ## Installation and Setup

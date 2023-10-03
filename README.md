@@ -80,4 +80,4 @@ masked_ip varchar(256),
 locale varchar(32),  
 masked_device_id varchar(256)  
 );  
-## Execute the python code with the python3 userlogins.py
+Finally, Execute the python code with the python3 userlogins.py

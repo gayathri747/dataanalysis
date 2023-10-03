@@ -21,11 +21,13 @@ botosession = boto3.Session(
 )
 sqs = botosession.client('sqs', endpoint_url=endpoint)
 
-# AWS SOS
-
-# ------------------------------------------
-# Specify the queue URL
-queue_url = 'http://localhost:4566/000000000000/login-queue'
+"""
+Queue URL is provided here for accessing the message queue of AWS SQS and reading the messages
+Connection parameters for connecting to the postgres are provided here 
+If incase hostname is not found run the below command and check the host name
+docker inspect -f '{{.Config.Hostname}}' <container-id>
+"""
+queueurl = 'http://localhost:4566/000000000000/login-queue'
 
 conn = psycopg2.connect(
     dbname='postgres',
@@ -35,72 +37,38 @@ conn = psycopg2.connect(
     port='5432'
 )
 
-def mask_value(value):
-    # Use a one-way hash function (SHA-256 in this example) to mask the value
+"""
+SHA 256 is used as the masking technique to encode the PII data. This is one way encryption and decrypting takes a longer time
+
+while there is a symmetric encryption  which requires a secured key which follows the 
+"""
+def maskpii(data):
     return hashlib.sha256(value.encode()).hexdigest()
 
-# insert_query = "INSERT INTO user_logins_test (user_id, device_type, masked_ip, masked_device_id,locale, app_version) VALUES (%s, %s,%s, %s,%s, %s)"
-
-cursor = conn.cursor()
-
-# -------------------------------------------
-# def trasnformdf(message_body):
-#     key_value_pairs = []
-#     for key, value in message_body.items():
-#         key_value_pairs.append((key, value))
-#         for key1, value1 in key_value_pairs:
-#             print(key1,value1)
-#             cursor.execute(insert_query, (key1, value1))
-    
-    # cursor.execute("INSERT INTO user_logins VALUES (%s, %s, %s, %s, %s, %s)", (
-    #     data['user_id'],
-    #     data['device_type'],
-    #     data['masked_ip'],
-    #     data['masked_device_id'],
-    #     data['locale'],
-    #     data['app_version']
-    # ))
-
 while True:
-    # Receive messages from the queue (max 10 messages at a time)
     response = sqs.receive_message(
         QueueUrl=queue_url,
-        AttributeNames=[
-            'All'
-        ],
-        MaxNumberOfMessages=10,
-        MessageAttributeNames=[
-            'All'
-        ],
+        AttributeNames=['All'],
+        MaxNumberOfMessages=5,
+        MessageAttributeNames=['All'],
         VisibilityTimeout=0,
         WaitTimeSeconds=0
     )
 
     if 'Messages' in response:
-        # for message in response.get('Messages', []):
         for message in response['Messages']:
             body = message['Body']
             message_body = json.loads(body)
-            # print(f"Received message: {body}")
-            # print(message)
-            # df = pd.read_json(body)
-            print(message_body)
-            insert_query = "INSERT INTO user_logins_test4 (user_id, app_version, device_type, ip,locale, device_id) VALUES (%s, %s,%s, %s,%s, %s)"
-            cursor.execute(insert_query, (message_body['user_id'], message_body['app_version'], message_body['device_type'],mask_value(message_body['ip']),message_body['locale'],mask_value(message_body['device_id'])))
+            # print(message_body)
+            insert_query = "INSERT INTO user_logins(user_id, app_version, device_type, ip,locale, device_id) VALUES (%s, %s,%s, %s,%s, %s)"
+            cursor.execute(insert_query, (message_body['user_id'], message_body['app_version'], message_body['device_type'],maskpii(message_body['ip']),message_body['locale'],maskpii(message_body['device_id'])))
             conn.commit()
             print("Data inserted successfully.")
-            # flattened_data = pd.json_normalize(message_body)
-            # print(flattened_data) 
-            # trasnformdf(message_body)
-
-            # Process the message as needed
-
             # Delete the message from the queue to mark it as processed
-            receipt_handle = message['ReceiptHandle']
+            receipt = message['ReceiptHandle']
             sqs.delete_message(
-                QueueUrl=queue_url,
-                ReceiptHandle=receipt_handle
+                QueueUrl=queueurl,
+                ReceiptHandle=receipt
             )
-
     else:
         print("No messages in the queue")

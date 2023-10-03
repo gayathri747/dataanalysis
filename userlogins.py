@@ -1,22 +1,25 @@
+"""
+Import boto3 for accessing the AWS Services from python
+If psycopg2 is not installed make sure to install it via the pip command mentioned in the README.md
+"""
 import boto3
 import json
 import pandas as pd
 import psycopg2
 
-# AWS SQS  --- PYTHON CODE ---- POSTGRES
-endpoint_url = 'http://localhost:4566/000000000000/login-queue'
+"""
+endpoint for the localstack is provided when we first run the docker run -p command this is used as url for connecting to the AWS services
+It can be either AWS SQS, AWS S3 etc..
+Dummy access key, secret and region is provided as we are using localstack if not AWS credentials are required.
+"""
+endpoint = 'http://localhost:4566/000000000000/login-queue'
 
-# Configure the SQS client for LocalStack
-
-session = boto3.Session(
-    aws_access_key_id='dummy-access-key',
-    aws_secret_access_key='dummy-secret-key',
-    region_name='us-east-1',  # You can specify any region
+botosession = boto3.Session(
+    aws_access_key_id='ACCESS_ID_KEY',
+    aws_secret_access_key='SECRET_ID_KEY',
+    region_name='us-east-1',  
 )
-
-
-s3 = session.client('s3', endpoint_url=endpoint_url)
-sqs = session.client('sqs', endpoint_url=endpoint_url)
+sqs = botosession.client('sqs', endpoint_url=endpoint)
 
 # AWS SOS
 

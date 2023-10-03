@@ -2,9 +2,8 @@
 
 ## Table of Contents
 ### Objective
-### Getting Started
 ### Prerequisites
-### Installation
+### Installation and Setup
 ### Acknowledgements
 
 ## Objective
@@ -33,11 +32,12 @@ You will have to make a number of decisions as you develop this solution:
 ● How will you mask the PII data so that duplicate values can be identified?  
 ● What will be your strategy for connecting and writing to Postgres?  
 ● Where and how will your application run?  
-## Installation on Mac 
+## Prerequisites
 1) Install Docker on local machine using the link: <https://docs.docker.com/get-docker/> 
 2) Run pip install awscli-local on the command line  
    If pip is not previously installed, First install Python and run pip command  
-3) Install Postgresql using the link:  <https://www.enterprisedb.com/downloads/postgres-postgresql-downloads>  
+3) Install Postgresql using the link:  <https://www.enterprisedb.com/downloads/postgres-postgresql-downloads>
+## Installation and Setup
 ### AWS Services and PostgresSQL Setup 
 1) Once Docker is installed properly, make sure the Docker is started and running.  
    Mac shows a green light with Running on the top of the desktop bar once the Installation is completed and Docker is started.  
@@ -52,8 +52,19 @@ You will have to make a number of decisions as you develop this solution:
   Issues: If there is any conflicting port that needs to be killed.  
   Check for conflicting ports with sudo lsof -I :5432  
   Use Sudo kill <PID>  for killing the conflicting process   
-6) Once the images are ready you should be able to check them using the **docker ps ** command from the terminal. This contains the CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS and PORTS  
-### Verifying the PostgresSQL table  
+6) Once the images are ready you should be able to check them using the **docker ps ** command from the terminal. This contains the CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS and PORTS
+
+## Python Code 
+1) After the Docker setup has been established, it is now time to structure our code to connect to both the endpoint URL's of AWS SQS and POSTGRES and establish connectivity
+2) This is achieved in the code area as doc strings but to be brief
+   Firstly, we require the end point url, queue url and connection strings for these connections.
+   Next Steps:
+     1) Using the AWS SDK connect to the SQS using dummy credentials(as we are using localstack to fake the aws services), provide region  
+     2) Connect to postgres using the endpoint url and connection parameters like username,password etc  
+     3) Using the receive message of sqs pull the messages from the queue and load it into flattened json object  
+     4) PII data is masked using the Hash function to make sure duplicate values are having same hash when retrieved  
+     5) The final output is ingested to postgresql into the user_logins table using the cursor.execute   
+### Verifying the PostgresSQL table 
 1) SSH to the postgres image **fetchdocker/data-takehome-localstack** using the below command. Container id is obtained from the previous step.  
      docker exec -it <container-id> /bin/bash  
 2) After entering into the localstack container run the below command to go to postgres#  
